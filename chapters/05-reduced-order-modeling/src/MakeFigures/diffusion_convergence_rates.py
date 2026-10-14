@@ -1,7 +1,19 @@
+import os
+import sys
+from pathlib import Path
 from typing import List, Callable
 
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+
+# Add to PYTHONPATH the folders of the project so the scripts can be imported
+this_file_path = __file__
+chapter_name = "05-reduced-order-modeling"
+chapter_path = os.path.abspath(os.path.join(this_file_path.split(chapter_name)[0], chapter_name))
+chapter_src_path = os.path.abspath(os.path.join(chapter_path, "src"))
+sys.path.insert(1, chapter_path)
+sys.path.insert(1, chapter_src_path)
+print(chapter_src_path)
 
 from src.config import figures_path
 from src.lib.SolutionsManagers import SolutionsManagerFEM
@@ -53,7 +65,7 @@ def reduced_basis_generator_greedy(solutions_offline: List[np.ndarray], number_o
 
 
 if __name__ == "__main__":
-    plt.style.use("figures.mplstyle")
+    plt.style.use(f"{Path(__file__).parent}/figures.mplstyle")
     np.random.seed(42)
     axes_xy_proportions = (4, 4)
 

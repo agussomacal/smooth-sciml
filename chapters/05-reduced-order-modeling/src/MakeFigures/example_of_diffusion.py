@@ -1,3 +1,16 @@
+import sys
+import os
+from pathlib import Path
+
+# Add to PYTHONPATH the folders of the project so the scripts can be imported
+this_file_path = __file__
+chapter_name = "05-reduced-order-modeling"
+chapter_path = os.path.abspath(os.path.join(this_file_path.split(chapter_name)[0], chapter_name))
+chapter_src_path = os.path.abspath(os.path.join(chapter_path, "src"))
+sys.path.insert(1, chapter_path)
+sys.path.insert(1, chapter_src_path)
+print(chapter_src_path)
+
 from src.config import figures_path
 from src.lib.SolutionsManagers import SolutionsManagerFEM
 from src.lib.VizUtils import save_fig
@@ -11,7 +24,7 @@ diffusion_coefficients = reshape_diffusion_coefficients_to_viz(diffusion_coeffic
 particular_solution_of_poisson = sm.generate_solutions(diffusion_coefficients)
 
 if __name__ == "__main__":
-    plt.style.use("figures.mplstyle")
+    plt.style.use(f"{Path(__file__).parent}/figures.mplstyle")
     axes_xy_proportions = (6, 6)
     np.random.seed(42)
 
