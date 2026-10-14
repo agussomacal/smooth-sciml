@@ -224,3 +224,8 @@ GITHUB_SETTINGS_GUIDE.md
 
 # Local PDF extraction/rendering workspace
 tmp/
+
+# Chapter specific files to ignore
+chapters/05-reduced-order-modeling/Data
+chapters/05-reduced-order-modeling/Results
+chapters/05-reduced-order-modeling/figures

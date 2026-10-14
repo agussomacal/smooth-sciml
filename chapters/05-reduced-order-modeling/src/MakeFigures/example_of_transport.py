@@ -1,7 +1,9 @@
+import jax.numpy as jnp
 import matplotlib
 import numpy as np
 from flax import nnx
 from matplotlib import pyplot as plt
+from perplexitylab.experiment_tools import perplexifier, make_hash
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import MultiTaskLassoCV
 from sklearn.pipeline import Pipeline
@@ -9,11 +11,8 @@ from sklearn.preprocessing import PolynomialFeatures
 
 from src.config import figures_path, data_temp_path
 from src.lib.SKLearnLikeModels import SKJaxMLP
-from src.lib.Utils4TransportEq import step_function_fourier_coeffs, power_modulation, order_coeffs_by_freq, \
+from src.lib.Utils4TransportEq import step_function_fourier_coeffs, order_coeffs_by_freq, \
     disorder_coeffs_by_freq, inv_ft, sample_space_for_non_linear_train, N_train_max
-import jax.numpy as jnp
-from perplexitylab.miscellaneous import if_exist_load_else_do, make_hash
-
 from src.lib.VizUtils import save_fig
 
 c_lim = (0.0, 0.0, 1)
@@ -43,11 +42,13 @@ def train(model, n_train, n, n_non_linear, k_max, c_lim, h_lim, w_lim, error=Non
     if new_hash != hashes:
         hashes = new_hash
         # ----- create dataset for training non linear models ----- #
-        coeffs_known, coeffs_to_learn = (if_exist_load_else_do(check_hash=True)(sample_space_for_non_linear_train)
-                                         (path=data_temp_path,
-                                          n_train=n_train, n=n, n_non_linear=n_non_linear,
-                                          k_max=k_max, power=0,
-                                          c_lim=c_lim, h_lim=h_lim, w_lim=w_lim))
+        coeffs_known, coeffs_to_learn = (
+            perplexifier(default_path=data_temp_path)(sample_space_for_non_linear_train)
+            (n_train=n_train, n=n, n_non_linear=n_non_linear,
+             k_max=k_max, power=0,
+             c_lim=c_lim, h_lim=h_lim, w_lim=w_lim)
+        )
+
         # train
         print("Training model", str(model))
         model.fit(np.array(coeffs_known), np.array(coeffs_to_learn))
@@ -144,7 +145,8 @@ def plot_reconstruction(c, h, theta, n_linear, models, k_max, Nx, c_lim=c_lim, h
             down_shift = 0.15
             legend = ax.legend(loc='upper center', bbox_to_anchor=(0.5, -down_shift))
             legend_height = legend.get_window_extent().height / fig.dpi
-            fig.subplots_adjust(bottom=-(legend_height + down_shift)/fig.get_figheight())  # Adjust bottom by the desired amount
+            fig.subplots_adjust(
+                bottom=-(legend_height + down_shift) / fig.get_figheight())  # Adjust bottom by the desired amount
         ax.spines["right"].set_visible(False)
         ax.spines["top"].set_visible(False)
         plt.tight_layout()

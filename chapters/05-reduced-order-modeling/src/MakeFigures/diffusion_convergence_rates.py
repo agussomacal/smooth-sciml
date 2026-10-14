@@ -1,6 +1,5 @@
 from typing import List, Callable
 
-import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 

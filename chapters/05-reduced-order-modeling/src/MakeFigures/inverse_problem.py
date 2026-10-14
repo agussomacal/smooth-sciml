@@ -5,7 +5,6 @@ from scipy.spatial.distance import cdist
 from src.MakeFigures.diffusion_convergence_rates import solution_sampling_method_uniform, reduced_basis_generator_pca
 from src.MakeFigures.example_of_diffusion import sm, particular_solution_of_poisson
 from src.config import figures_path
-from src.lib.SolutionsManagers import SolutionsManagerFEM
 from src.lib.VizUtils import SOLUTION_CMAP, prepare_solution4plot, plot_solution, save_fig
 
 
